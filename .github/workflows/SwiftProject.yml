@@ -24,7 +24,7 @@ jobs:
       - name: Show available schemes
         run: |
           echo "Detecting schemes..."
-          xcodebuild -list -project YourProject.xcodeproj
+          xcodebuild -list -project QuoteApp.xcodeproj
 
       - name: Build project
         run: |
