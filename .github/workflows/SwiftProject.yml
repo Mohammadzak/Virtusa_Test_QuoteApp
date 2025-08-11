@@ -12,7 +12,7 @@ jobs:
       - name: Setup Swift
         uses: swift-actions/setup-swift@v2.3.0
         with:
-          java-version: '6.1.0'
+          swift-version: '6.1.0'
 
       - name: Show Swift version
         run: swift --version
