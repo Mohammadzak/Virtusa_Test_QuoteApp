@@ -1,0 +1,43 @@
+name: Setup Swift
+
+on: workflow_dispatch
+
+jobs:
+ CI_Non-conterization_build:
+  runs-on: ubuntu-latest
+  steps:
+      - name: Checkout
+        uses: action/checkout@4.2.0
+
+      - name: Setup Swift
+        uses: swift-actions/setup-swift@v2.3.0
+        with:
+          java-version: '6.1.0'
+
+      - name: Show Swift version
+        run: swift --version
+
+      - name: Install xcpretty
+        run: |
+          gem install xcpretty
+
+      - name: Show available schemes
+        run: |
+          echo "Detecting schemes..."
+          xcodebuild -list -project YourProject.xcodeproj
+          
+      - name: Build project
+        run: |
+         xcodebuild -scheme YourSchemeName -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 14,OS=latest' build | xcpretty
+
+      - name: Build project
+        run: |
+          # Auto-detect scheme name
+          SCHEME=$(xcodebuild -list -project QuoteApp.xcodeproj | awk '/Schemes:/,/^$/' | sed -n '2p' | xargs)
+          echo "Detected scheme: $SCHEME"
+
+          xcodebuild \
+            -scheme "$SCHEME" \
+            -sdk iphonesimulator \
+            -destination 'platform=iOS Simulator,name=iPhone 14,OS=latest' \
+            build | xcpretty
