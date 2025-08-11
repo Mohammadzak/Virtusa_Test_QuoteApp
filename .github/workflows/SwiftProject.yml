@@ -4,7 +4,7 @@ on: workflow_dispatch
 
 jobs:
  CI_Non-conterization_build:
-  runs-on: ubuntu-latest
+  runs-on: macos-latest
   steps:
       - name: Checkout
         uses: actions/checkout@v4.2.2
@@ -17,9 +17,9 @@ jobs:
       - name: Show Swift version
         run: swift --version
 
-      - name: Install xcpretty
-        run: |
-          gem install xcpretty
+      # - name: Install xcpretty
+      #   run: |
+      #     gem install xcpretty
 
       - name: Show available schemes
         run: |
