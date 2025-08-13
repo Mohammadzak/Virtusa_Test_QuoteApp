@@ -1,5 +1,4 @@
-
-name: Swift Build Setup
+name: Manual Build & Test (SPM)
 
 on:
   workflow_dispatch:
@@ -12,33 +11,8 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Set up Xcode
-        uses: maxim-lobanov/setup-xcode@v1
-        with:
-          xcode-version: '15.0' # Change if needed
+      - name: Build with Swift Package Manager
+        run: swift build --configuration debug
 
-      - name: Install dependencies
-        run: |
-          # Uncomment if using Swift Package Manager
-          # swift package resolve
-          # Uncomment if using CocoaPods
-          # pod install
-          echo "Dependencies installed"
-
-      - name: Build the app
-        run: |
-          xcodebuild \
-            -project QuoteApp.xcodeproj \
-            -scheme QuoteApp \
-            -configuration Debug \
-            -destination "platform=iOS Simulator,name=iPhone 15" \
-            build-for-testing
-
-      - name: Run unit tests
-        run: |
-          xcodebuild \
-            -project QuoteApp.xcodeproj \
-            -scheme QuoteApp \
-            -configuration Debug \
-            -destination "platform=iOS Simulator,name=iPhone 15" \
-            test
+      - name: Run tests
+        run: swift test
