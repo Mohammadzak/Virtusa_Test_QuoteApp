@@ -1,39 +1,44 @@
-name: Setup Swift
 
-on: workflow_dispatch
+name: SetUpSwiftBuild
+
+on:
+  workflow_dispatch:
 
 jobs:
- CI_Non-conterization_build:
-  runs-on: macos-latest
-  steps:
-      - name: Checkout
-        uses: actions/checkout@v4.2.2
+  build:
+    runs-on: macos-latest
 
-      - name: Setup Swift
-        uses: swift-actions/setup-swift@v2.3.0
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Xcode
+        uses: maxim-lobanov/setup-xcode@v2
         with:
-          swift-version: '6.1.0'
+          xcode-version: '15' # Change if you need a specific version
 
-      - name: Show Swift version
-        run: swift --version
-
-      # - name: Install xcpretty
-      #   run: |
-      #     gem install xcpretty
-
-      - name: Show available schemes
+      - name: Install dependencies
         run: |
-          echo "Detecting schemes..."
-          xcodebuild -list -project QuoteApp.xcodeproj
+          # Uncomment if using Swift Package Manager
+          # swift package resolve
+          # Uncomment if using CocoaPods
+          # pod install
+          echo "Dependencies installed"
 
-      - name: Build project
+      - name: Build the app
         run: |
-          # Auto-detect scheme name
-          SCHEME=$(xcodebuild -list -project QuoteApp.xcodeproj | awk '/Schemes:/,/^$/' | sed -n '2p' | xargs)
-          echo "Detected scheme: $SCHEME"
-
           xcodebuild \
-            -scheme "$SCHEME" \
-            -sdk iphonesimulator \
-            -destination 'platform=iOS Simulator,name=iPhone 14,OS=latest' \
-            build | xcpretty
+            -project QuoteApp.xcodeproj \
+            -scheme QuoteApp \
+            -configuration Debug \
+            -destination "platform=iOS Simulator,name=iPhone 15" \
+            build-for-testing
+
+      - name: Run unit tests
+        run: |
+          xcodebuild \
+            -project QuoteApp.xcodeproj \
+            -scheme QuoteApp \
+            -configuration Debug \
+            -destination "platform=iOS Simulator,name=iPhone 15" \
+            test
