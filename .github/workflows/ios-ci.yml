@@ -1,0 +1,44 @@
+
+name: iOS CI
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Xcode 15
+        uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: '15.0.1'
+
+      - name: Install dependencies (optional)
+        run: |
+          # Uncomment if using Swift Package Manager:
+          # swift package resolve
+          # Uncomment if using CocoaPods:
+          # pod install
+          echo "Dependencies installed"
+
+      - name: Build the project
+        run: |
+          xcodebuild \
+            -project QuoteApp.xcodeproj \
+            -scheme QuoteApp \
+            -configuration Debug \
+            -destination "platform=iOS Simulator,name=iPhone 15" \
+            build-for-testing
+
+      - name: Run unit tests
+        run: |
+          xcodebuild \
+            -project QuoteApp.xcodeproj \
+            -scheme QuoteApp \
+            -configuration Debug \
+            -destination "platform=iOS Simulator,name=iPhone 15" \
+            test
